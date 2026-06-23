@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kanban de Projetos</title>
+
+<style>
+    :root{
+    --gold-light:#CAB273;
+    --gold-dark:#917847;
+
+    --bg-dark:#343639;
+    --bg-medium:#414347;
+    --bg-light:#515153;
+
+    --text-light:#f5f5f5;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:var(--bg-dark);
+    color:var(--text-light);
+    padding:20px;
+    min-height:100vh;
+}
+
+/* HEADER */
+
+header{
+    background:var(--bg-medium);
+    border:1px solid var(--gold-dark);
+    border-radius:20px;
+    padding:20px;
+    margin-bottom:25px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+h1{
+    color:var(--gold-light);
+}
+
+/* BOTÕES */
+
+.btn,
+.btn-add,
+.btn-danger{
+    border:none;
+    cursor:pointer;
+    border-radius:12px;
+    padding:12px 18px;
+    font-weight:bold;
+    transition:.3s;
+}
+
+.btn{
+    background:#6b7280;
+    color:white;
+}
+
+.btn:hover{
+    filter:brightness(1.1);
+}
+
+.btn-add{
+    background:linear-gradient(
+        135deg,
+        var(--gold-light),
+        var(--gold-dark)
+    );
+
+    color:#222;
+}
+
+.btn-add:hover{
+    filter:brightness(1.1);
+    transform:translateY(-2px);
+}
+
+.btn-danger{
+    background:#991b1b;
+    color:white;
+}
+
+.btn-danger:hover{
+    background:#b91c1c;
+}
+
+/* KANBAN */
+
+.kanban{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+}
+
+.column{
+    background:var(--bg-medium);
+    border:1px solid var(--gold-dark);
+    border-radius:20px;
+    padding:20px;
+    min-height:700px;
+}
+
+.column h2{
+    color:var(--gold-light);
+    text-align:center;
+    margin-bottom:20px;
+}
+
+/* CARDS */
+
+.card{
+    background:var(--bg-dark);
+    border:1px solid var(--gold-dark);
+    border-radius:16px;
+    padding:18px;
+    margin-bottom:15px;
+    cursor:pointer;
+    transition:.3s;
+
+    box-shadow:
+        0 0 15px rgba(202,178,115,.10);
+}
+
+.card:hover{
+    transform:translateY(-5px);
+
+    border-color:var(--gold-light);
+
+    box-shadow:
+        0 0 25px rgba(202,178,115,.35);
+}
+
+.card h3{
+    color:var(--gold-light);
+    margin-bottom:8px;
+}
+
+.card p{
+    color:#d5d5d5;
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+
+    background:rgba(0,0,0,.75);
+
+    display:none;
+
+    justify-content:center;
+    align-items:center;
+
+    z-index:9999;
+
+    padding:20px;
+}
+
+.modal-content{
+    background:var(--bg-medium);
+
+    border:1px solid var(--gold-dark);
+
+    color:white;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    width:95%;
+    max-width:700px;
+
+    max-height:90vh;
+
+    overflow:auto;
+
+    box-shadow:
+        0 0 30px rgba(202,178,115,.25);
+}
+
+.close{
+    float:right;
+
+    font-size:30px;
+
+    cursor:pointer;
+
+    color:var(--gold-light);
+}
+
+.close:hover{
+    opacity:.8;
+}
+
+/* FORMULÁRIOS */
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+
+    margin-bottom:6px;
+
+    color:var(--gold-light);
+
+    font-weight:bold;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+
+    background:var(--bg-dark);
+
+    border:1px solid var(--gold-dark);
+
+    color:white;
+
+    border-radius:10px;
+
+    padding:12px;
+}
+
+textarea{
+    resize:vertical;
+    min-height:100px;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+    outline:none;
+
+    border-color:var(--gold-light);
+
+    box-shadow:
+        0 0 10px rgba(202,178,115,.25);
+}
+
+/* DETALHES */
+
+.detail-row{
+    margin-bottom:15px;
+}
+
+.detail-row strong{
+    display:block;
+
+    margin-bottom:5px;
+
+    color:var(--gold-light);
+}
+
+.link{
+    color:var(--gold-light);
+    text-decoration:none;
+}
+
+.link:hover{
+    text-decoration:underline;
+}
+
+/* AÇÕES MODAL */
+
+.modal-actions{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:20px;
+}
+
+/* SCROLLBAR */
+
+::-webkit-scrollbar{
+    width:10px;
+}
+
+::-webkit-scrollbar-track{
+    background:var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb{
+    background:var(--gold-dark);
+    border-radius:10px;
+}
+
+::-webkit-scrollbar-thumb:hover{
+    background:var(--gold-light);
+}
+
+/* RESPONSIVO */
+
+@media(max-width:900px){
+
+    header{
+        flex-direction:column;
+        gap:15px;
+    }
+
+    .kanban{
+        grid-template-columns:1fr;
+    }
+
+    .column{
+        min-height:300px;
+    }
+}
+
+.header-buttons{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.btn-profile{
+    background:var(--bg-dark);
+
+    border:1px solid var(--gold-dark);
+
+    color:var(--gold-light);
+
+    text-decoration:none;
+
+    padding:12px 18px;
+
+    border-radius:12px;
+
+    font-weight:bold;
+
+    transition:.3s;
+}
+
+.btn-profile:hover{
+    border-color:var(--gold-light);
+
+    box-shadow:
+        0 0 15px rgba(202,178,115,.25);
+
+    transform:translateY(-2px);
+}
+</style>
+</head>
+<body>
+
+<header>
+
+    <h1>📋Projetos</h1>
+
+    <div class="header-buttons">
+
+        <a href="index2.html" class="btn-profile">
+            👤 Perfil
+        </a>
+
+        <button class="btn btn-add" onclick="abrirCadastro()">
+            ➕ Novo Projeto
+        </button>
+
+    </div>
+
+</header>
+
+<div class="kanban">
+
+    <div class="column"
+         data-status="nao-iniciado"
+         ondragover="allowDrop(event)"
+         ondrop="drop(event)">
+        <h2>🚫 Não Iniciados</h2>
+        <div id="nao-iniciado"></div>
+    </div>
+
+    <div class="column"
+         data-status="andamento"
+         ondragover="allowDrop(event)"
+         ondrop="drop(event)">
+        <h2>🔄 Em Andamento</h2>
+        <div id="andamento"></div>
+    </div>
+
+    <div class="column"
+         data-status="finalizado"
+         ondragover="allowDrop(event)"
+         ondrop="drop(event)">
+        <h2>✅ Finalizados</h2>
+        <div id="finalizado"></div>
+    </div>
+
+</div>
+
+<!-- Modal Cadastro -->
+<div class="modal" id="modalCadastro">
+    <div class="modal-content">
+
+        <span class="close" onclick="fecharCadastro()">&times;</span>
+
+        <h2>Novo Projeto</h2>
+
+        <div class="form-group">
+            <label>Nome do Projeto</label>
+            <input id="nomeProjeto">
+        </div>
+
+        <div class="form-group">
+            <label>Nome do Cliente</label>
+            <input id="clienteProjeto">
+        </div>
+
+        <div class="form-group">
+            <label>Link do Projeto</label>
+            <input id="linkProjeto">
+        </div>
+
+        <div class="form-group">
+            <label>Data de Início</label>
+            <input type="date" id="inicioProjeto">
+        </div>
+
+        <div class="form-group">
+            <label>Data Prazo</label>
+            <input type="date" id="prazoProjeto">
+        </div>
+
+        <div class="form-group">
+            <label>Status</label>
+            <select id="statusProjeto">
+                <option value="nao-iniciado">Não Iniciado</option>
+                <option value="andamento">Em Andamento</option>
+                <option value="finalizado">Finalizado</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Descrição</label>
+            <textarea id="descricaoProjeto"></textarea>
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn" onclick="fecharCadastro()">Cancelar</button>
+            <button class="btn btn-add" onclick="salvarProjeto()">Salvar</button>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal Detalhes -->
+<div class="modal" id="modalDetalhes">
+    <div class="modal-content">
+
+        <span class="close" onclick="fecharDetalhes()">&times;</span>
+
+        <h2 id="dNome"></h2>
+
+        <div class="detail-row">
+            <strong>Cliente</strong>
+            <span id="dCliente"></span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Link</strong>
+            <a id="dLink" target="_blank" class="link">Abrir Projeto</a>
+        </div>
+
+        <div class="detail-row">
+            <strong>Data de Início</strong>
+            <span id="dInicio"></span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Data Prazo</strong>
+            <span id="dPrazo"></span>
+        </div>
+
+        <div class="detail-row">
+            <strong>Descrição</strong>
+            <p id="dDescricao"></p>
+        </div>
+
+        <button class="btn btn-danger" id="btnExcluir">
+            Excluir Projeto
+        </button>
+
+    </div>
+</div>
+
+<script>
+
+let projetos =
+JSON.parse(localStorage.getItem("projetos")) || [];
+
+let projetoSelecionado = null;
+
+function salvarStorage(){
+    localStorage.setItem(
+        "projetos",
+        JSON.stringify(projetos)
+    );
+}
+
+function abrirCadastro(){
+    document.getElementById("modalCadastro").style.display="flex";
+}
+
+function fecharCadastro(){
+    document.getElementById("modalCadastro").style.display="none";
+}
+
+function fecharDetalhes(){
+    document.getElementById("modalDetalhes").style.display="none";
+}
+
+function salvarProjeto(){
+
+    const projeto = {
+        id: Date.now(),
+        nome: document.getElementById("nomeProjeto").value,
+        cliente: document.getElementById("clienteProjeto").value,
+        link: document.getElementById("linkProjeto").value,
+        inicio: document.getElementById("inicioProjeto").value,
+        prazo: document.getElementById("prazoProjeto").value,
+        status: document.getElementById("statusProjeto").value,
+        descricao: document.getElementById("descricaoProjeto").value
+    };
+
+    if(!projeto.nome){
+        alert("Informe o nome do projeto.");
+        return;
+    }
+
+    projetos.push(projeto);
+
+    salvarStorage();
+    renderizar();
+
+    fecharCadastro();
+
+    document.querySelectorAll(
+        "#modalCadastro input, #modalCadastro textarea"
+    ).forEach(c=>c.value="");
+}
+
+function renderizar(){
+
+    document.getElementById("nao-iniciado").innerHTML="";
+    document.getElementById("andamento").innerHTML="";
+    document.getElementById("finalizado").innerHTML="";
+
+    projetos.forEach(p=>{
+
+        const card=document.createElement("div");
+        card.className="card";
+        card.draggable=true;
+
+        card.innerHTML=`
+            <h3>${p.nome}</h3>
+            <p>${p.cliente}</p>
+        `;
+
+        card.onclick=()=>abrirDetalhes(p.id);
+
+        card.addEventListener("dragstart",e=>{
+            e.dataTransfer.setData("id",p.id);
+        });
+
+        document
+            .getElementById(p.status)
+            .appendChild(card);
+
+    });
+}
+
+function abrirDetalhes(id){
+
+    const p=projetos.find(x=>x.id===id);
+
+    projetoSelecionado=id;
+
+    document.getElementById("dNome").innerText=p.nome;
+    document.getElementById("dCliente").innerText=p.cliente;
+    document.getElementById("dInicio").innerText=p.inicio;
+    document.getElementById("dPrazo").innerText=p.prazo;
+    document.getElementById("dDescricao").innerText=p.descricao;
+
+    document.getElementById("dLink").href=p.link;
+
+    document.getElementById("btnExcluir").onclick=()=>{
+        excluirProjeto(id);
+    };
+
+    document.getElementById("modalDetalhes").style.display="flex";
+}
+
+function excluirProjeto(id){
+
+    if(!confirm("Deseja excluir este projeto?"))
+        return;
+
+    projetos=projetos.filter(
+        p=>p.id!==id
+    );
+
+    salvarStorage();
+    renderizar();
+    fecharDetalhes();
+}
+
+function allowDrop(ev){
+    ev.preventDefault();
+}
+
+function drop(ev){
+
+    ev.preventDefault();
+
+    const id =
+    Number(ev.dataTransfer.getData("id"));
+
+    const coluna =
+    ev.currentTarget.dataset.status;
+
+    const projeto =
+    projetos.find(p=>p.id===id);
+
+    projeto.status=coluna;
+
+    salvarStorage();
+    renderizar();
+}
+
+renderizar();
+
+</script>
+
+</body>
+</html>
