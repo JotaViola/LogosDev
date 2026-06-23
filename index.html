@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kanban de Projetos</title>
+<title>LogosDev</title>
 
 <style>
     :root{
@@ -31,22 +31,89 @@ body{
     min-height:100vh;
 }
 
-/* HEADER */
+/* =========================
+HEADER LOGOS DEV
+========================= */
 
 header{
     background:var(--bg-medium);
-    border:1px solid var(--gold-dark);
-    border-radius:20px;
+
+    border-bottom:2px solid var(--gold-dark);
+
     padding:20px;
-    margin-bottom:25px;
 
     display:flex;
     justify-content:space-between;
     align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:20px;
+
+    border-radius:20px;
+
+    margin-bottom:25px;
 }
 
-h1{
+.logo{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.logo-img{
+    width:90px;
+    height:90px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:3px solid var(--gold-light);
+
+    box-shadow:
+        0 0 15px rgba(202,178,115,.4);
+}
+
+.logo h1{
     color:var(--gold-light);
+    font-size:32px;
+}
+
+.logo p{
+    color:#d5d5d5;
+    margin-top:5px;
+}
+
+nav{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+nav a{
+    padding:12px 20px;
+
+    border-radius:12px;
+
+    background:linear-gradient(
+        135deg,
+        var(--gold-light),
+        var(--gold-dark)
+    );
+
+    color:#222;
+
+    font-weight:bold;
+
+    text-decoration:none;
+
+    transition:.3s;
+}
+
+nav a:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.1);
 }
 
 /* BOTÕES */
@@ -359,19 +426,21 @@ select:focus{
 
 <header>
 
-    <h1>📋Projetos</h1>
+    <div class="logo">
 
-    <div class="header-buttons">
+        <img src="logosdev_logo.jpg" class="logo-img">
 
-        <a href="index2.html" class="btn-profile">
-            👤 Perfil
-        </a>
-
-        <button class="btn btn-add" onclick="abrirCadastro()">
-            ➕ Novo Projeto
-        </button>
+        <div>
+            <h1>Logos Dev</h1>
+            <p>Do código ao propósito</p>
+        </div>
 
     </div>
+
+    <nav>
+        <a href="index2.html">👤 Perfil</a>
+        <a href="#" onclick="abrirCadastro()">➕ Projeto</a>
+    </nav>
 
 </header>
 
