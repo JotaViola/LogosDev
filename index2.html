@@ -71,13 +71,22 @@ nav{
 }
 
 nav a{
-  color:white;
-  text-decoration:none;
-  transition:0.3s;
+    padding:12px 20px;
+    border-radius:12px;
+    background:linear-gradient(
+        135deg,
+        var(--gold-light),
+        var(--gold-dark)
+    );
+    color:#222;
+    font-weight:bold;
+    text-decoration:none;
+    transition:0.3s;
 }
 
 nav a:hover{
-  color:#60a5fa;
+    transform:translateY(-2px);
+    filter:brightness(1.1);
 }
 
 .edit-btn{
@@ -800,10 +809,8 @@ footer{
 </div>
 
   <nav>
-
-    
-
-  </nav>
+    <a href="index.html">Projetos</a>
+</nav>
 
   <button
   class="edit-btn"
@@ -876,55 +883,19 @@ footer{
     <!-- STATS -->
     <div class="stats">
 
-      <div class="stat">
+  <div class="stat">
+    <h3 class="statText">0</h3>
+    <input class="statInput" value="0">
+    <p>Projetos</p>
+  </div>
 
-        <h3 class="statText">
-          0
-        </h3>
+  <div class="stat">
+    <h3 class="statText">0</h3>
+    <input class="statInput" value="0">
+    <p>Anos</p>
+  </div>
 
-        <input
-        class="statInput"
-        value="0">
-
-        <p>
-          Projetos
-        </p>
-
-      </div>
-
-      <div class="stat">
-
-        <h3 class="statText">
-          0
-        </h3>
-
-        <input
-        class="statInput"
-        value="0">
-
-        <p>
-          Funcionários
-        </p>
-
-      </div>
-
-      <div class="stat">
-
-        <h3 class="statText">
-          0
-        </h3>
-
-        <input
-        class="statInput"
-        value="0">
-
-        <p>
-          Anos XP
-        </p>
-
-      </div>
-
-    </div>
+</div>
 
   </section>
 
