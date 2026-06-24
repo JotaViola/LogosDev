@@ -634,13 +634,13 @@ function salvarProjeto(){
 
     const projeto = {
         id: Date.now(),
-        document.getElementById("dNome").value = p.nome;
-document.getElementById("dCliente").value = p.cliente;
-document.getElementById("dInicio").value = p.inicio;
-document.getElementById("dPrazo").value = p.prazo;
-document.getElementById("dDescricao").value = p.descricao;
-document.getElementById("dLink").value = p.link;
-document.getElementById("dStatus").value = p.status;
+        nome: document.getElementById("nomeProjeto").value,
+        cliente: document.getElementById("clienteProjeto").value,
+        link: document.getElementById("linkProjeto").value,
+        inicio: document.getElementById("inicioProjeto").value,
+        prazo: document.getElementById("prazoProjeto").value,
+        status: document.getElementById("statusProjeto").value,
+        descricao: document.getElementById("descricaoProjeto").value
     };
 
     if(!projeto.nome){
@@ -648,6 +648,17 @@ document.getElementById("dStatus").value = p.status;
         return;
     }
 
+    projetos.push(projeto);
+
+    salvarStorage();
+    renderizar();
+
+    fecharCadastro();
+
+    document.querySelectorAll(
+        "#modalCadastro input, #modalCadastro textarea"
+    ).forEach(c => c.value = "");
+}
     projetos.push(projeto);
 
     salvarStorage();
@@ -724,23 +735,26 @@ document.getElementById("rejeitado").innerHTML="";
 
 function abrirDetalhes(id){
 
-    const p=projetos.find(x=>x.id===id);
+    const p = projetos.find(x => x.id === id);
 
-    projetoSelecionado=id;
+    projetoSelecionado = id;
 
-    document.getElementById("dNome").innerText=p.nome;
-    document.getElementById("dCliente").innerText=p.cliente;
-    document.getElementById("dInicio").innerText=p.inicio;
-    document.getElementById("dPrazo").innerText=p.prazo;
-    document.getElementById("dDescricao").innerText=p.descricao;
+    document.getElementById("dNome").value = p.nome;
+    document.getElementById("dCliente").value = p.cliente;
+    document.getElementById("dInicio").value = p.inicio;
+    document.getElementById("dPrazo").value = p.prazo;
+    document.getElementById("dDescricao").value = p.descricao;
+    document.getElementById("dLink").value = p.link;
+    document.getElementById("dStatus").value = p.status;
 
-    document.getElementById("dLink").href=p.link;
+    document.getElementById("btnEditar").onclick =
+    editarProjeto;
 
-    document.getElementById("btnExcluir").onclick=()=>{
+    document.getElementById("btnExcluir").onclick = () => {
         excluirProjeto(id);
     };
 
-    document.getElementById("modalDetalhes").style.display="flex";
+    document.getElementById("modalDetalhes").style.display = "flex";
 }
 function editarProjeto(){
 
@@ -770,12 +784,10 @@ function editarProjeto(){
     projeto.status =
     document.getElementById("dStatus").value;
 
-    document.getElementById("btnEditar").onclick =
-editarProjeto;
     salvarStorage();
     renderizar();
 
-    alert("Projeto atualizado!");
+    alert("Projeto atualizado com sucesso!");
 
     fecharDetalhes();
 }
