@@ -577,9 +577,15 @@ select:focus{
             <p id="dDescricao"></p>
         </div>
 
-        <button class="btn btn-danger" id="btnExcluir">
-            Excluir Projeto
-        </button>
+        <div class="modal-actions">
+    <button class="btn btn-add" id="btnEditar">
+        ✏️ Editar Projeto
+    </button>
+
+    <button class="btn btn-danger" id="btnExcluir">
+        Excluir Projeto
+    </button>
+</div>
 
     </div>
 </div>
@@ -590,6 +596,7 @@ let projetos =
 JSON.parse(localStorage.getItem("projetos")) || [];
 
 let projetoSelecionado = null;
+let editandoProjeto = null;
 
 function salvarStorage(){
     localStorage.setItem(
@@ -612,33 +619,40 @@ function fecharDetalhes(){
 
 function salvarProjeto(){
 
-    const projeto = {
-        id: Date.now(),
-        nome: document.getElementById("nomeProjeto").value,
-        cliente: document.getElementById("clienteProjeto").value,
-        link: document.getElementById("linkProjeto").value,
-        inicio: document.getElementById("inicioProjeto").value,
-        prazo: document.getElementById("prazoProjeto").value,
-        status: document.getElementById("statusProjeto").value,
-        descricao: document.getElementById("descricaoProjeto").value
-    };
+    if(editandoProjeto){
 
-    if(!projeto.nome){
-        alert("Informe o nome do projeto.");
+        const projeto =
+        projetos.find(p => p.id === editandoProjeto);
+
+        projeto.nome =
+        document.getElementById("nomeProjeto").value;
+
+        projeto.cliente =
+        document.getElementById("clienteProjeto").value;
+
+        projeto.link =
+        document.getElementById("linkProjeto").value;
+
+        projeto.inicio =
+        document.getElementById("inicioProjeto").value;
+
+        projeto.prazo =
+        document.getElementById("prazoProjeto").value;
+
+        projeto.status =
+        document.getElementById("statusProjeto").value;
+
+        projeto.descricao =
+        document.getElementById("descricaoProjeto").value;
+
+        editandoProjeto = null;
+
+        salvarStorage();
+        renderizar();
+        fecharCadastro();
+
         return;
     }
-
-    projetos.push(projeto);
-
-    salvarStorage();
-    renderizar();
-
-    fecharCadastro();
-
-    document.querySelectorAll(
-        "#modalCadastro input, #modalCadastro textarea"
-    ).forEach(c=>c.value="");
-}
 
 function renderizar(){
 
@@ -716,24 +730,50 @@ function abrirDetalhes(id){
 
     document.getElementById("dLink").href=p.link;
 
-    document.getElementById("btnExcluir").onclick=()=>{
+    // BOTÃO EDITAR
+    document.getElementById("btnEditar").onclick = () => {
+        editarProjeto(id);
+    };
+
+    // BOTÃO EXCLUIR
+    document.getElementById("btnExcluir").onclick = () => {
         excluirProjeto(id);
     };
 
     document.getElementById("modalDetalhes").style.display="flex";
 }
+    function editarProjeto(id){
 
+    const p = projetos.find(x => x.id === id);
+
+    editandoProjeto = id;
+
+    document.getElementById("nomeProjeto").value = p.nome;
+    document.getElementById("clienteProjeto").value = p.cliente;
+    document.getElementById("linkProjeto").value = p.link;
+    document.getElementById("inicioProjeto").value = p.inicio;
+    document.getElementById("prazoProjeto").value = p.prazo;
+    document.getElementById("statusProjeto").value = p.status;
+    document.getElementById("descricaoProjeto").value = p.descricao;
+
+    fecharDetalhes();
+    abrirCadastro();
+}
 function excluirProjeto(id){
 
     if(!confirm("Deseja excluir este projeto?"))
         return;
 
-    projetos=projetos.filter(
-        p=>p.id!==id
+    projetos = projetos.filter(
+        p => p.id !== id
     );
 
     salvarStorage();
-    function aceitarProjeto(id){
+    renderizar();
+    fecharDetalhes();
+}
+
+function aceitarProjeto(id){
 
     const projeto =
     projetos.find(p => p.id === id);
@@ -753,8 +793,6 @@ function rejeitarProjeto(id){
 
     salvarStorage();
     renderizar();
-}
-    fecharDetalhes();
 }
 
 function allowDrop(ev){
