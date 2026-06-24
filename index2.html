@@ -550,36 +550,56 @@ select:focus{
 
         <span class="close" onclick="fecharDetalhes()">&times;</span>
 
-        <h2 id="dNome"></h2>
+        <input id="dNome" style="font-size:22px;font-weight:bold;">
 
         <div class="detail-row">
             <strong>Cliente</strong>
-            <span id="dCliente"></span>
+            <input id="dCliente">
         </div>
 
         <div class="detail-row">
             <strong>Link</strong>
-            <a id="dLink" target="_blank" class="link">Abrir Projeto</a>
+            <input id="dLink">
         </div>
 
         <div class="detail-row">
             <strong>Data de Início</strong>
-            <span id="dInicio"></span>
+            <input type="date" id="dInicio">
         </div>
 
         <div class="detail-row">
             <strong>Data Prazo</strong>
-            <span id="dPrazo"></span>
+            <input type="date" id="dPrazo">
         </div>
 
         <div class="detail-row">
+    <strong>Status</strong>
+
+    <select id="dStatus">
+        <option value="solicitacao">Solicitação</option>
+        <option value="nao-iniciado">Não Iniciado</option>
+        <option value="andamento">Em Andamento</option>
+        <option value="finalizado">Finalizado</option>
+        <option value="rejeitado">Rejeitado</option>
+    </select>
+</div>
+
+        <div class="detail-row">
             <strong>Descrição</strong>
-            <p id="dDescricao"></p>
+            <textarea id="dDescricao"></textarea>
         </div>
 
-        <button class="btn btn-danger" id="btnExcluir">
-            Excluir Projeto
-        </button>
+       <div class="modal-actions">
+
+    <button class="btn btn-add" id="btnEditar">
+        ✏ Editar
+    </button>
+
+    <button class="btn btn-danger" id="btnExcluir">
+        Excluir Projeto
+    </button>
+
+</div>
 
     </div>
 </div>
@@ -614,13 +634,13 @@ function salvarProjeto(){
 
     const projeto = {
         id: Date.now(),
-        nome: document.getElementById("nomeProjeto").value,
-        cliente: document.getElementById("clienteProjeto").value,
-        link: document.getElementById("linkProjeto").value,
-        inicio: document.getElementById("inicioProjeto").value,
-        prazo: document.getElementById("prazoProjeto").value,
-        status: document.getElementById("statusProjeto").value,
-        descricao: document.getElementById("descricaoProjeto").value
+        document.getElementById("dNome").value = p.nome;
+document.getElementById("dCliente").value = p.cliente;
+document.getElementById("dInicio").value = p.inicio;
+document.getElementById("dPrazo").value = p.prazo;
+document.getElementById("dDescricao").value = p.descricao;
+document.getElementById("dLink").value = p.link;
+document.getElementById("dStatus").value = p.status;
     };
 
     if(!projeto.nome){
@@ -722,18 +742,58 @@ function abrirDetalhes(id){
 
     document.getElementById("modalDetalhes").style.display="flex";
 }
+function editarProjeto(){
 
+    const projeto =
+    projetos.find(
+        p => p.id === projetoSelecionado
+    );
+
+    projeto.nome =
+    document.getElementById("dNome").value;
+
+    projeto.cliente =
+    document.getElementById("dCliente").value;
+
+    projeto.link =
+    document.getElementById("dLink").value;
+
+    projeto.inicio =
+    document.getElementById("dInicio").value;
+
+    projeto.prazo =
+    document.getElementById("dPrazo").value;
+
+    projeto.descricao =
+    document.getElementById("dDescricao").value;
+
+    projeto.status =
+    document.getElementById("dStatus").value;
+
+    document.getElementById("btnEditar").onclick =
+editarProjeto;
+    salvarStorage();
+    renderizar();
+
+    alert("Projeto atualizado!");
+
+    fecharDetalhes();
+}
 function excluirProjeto(id){
 
     if(!confirm("Deseja excluir este projeto?"))
         return;
 
-    projetos=projetos.filter(
-        p=>p.id!==id
+    projetos = projetos.filter(
+        p => p.id !== id
     );
 
     salvarStorage();
-    function aceitarProjeto(id){
+    renderizar();
+    fecharDetalhes();
+}
+
+function aceitarProjeto(id){
 
     const projeto =
     projetos.find(p => p.id === id);
@@ -753,8 +813,6 @@ function rejeitarProjeto(id){
 
     salvarStorage();
     renderizar();
-}
-    fecharDetalhes();
 }
 
 function allowDrop(ev){
