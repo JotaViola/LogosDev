@@ -728,15 +728,21 @@ function excluirProjeto(id){
     if(!confirm("Deseja excluir este projeto?"))
         return;
 
-    projetos=projetos.filter(
-        p=>p.id!==id
+    projetos = projetos.filter(
+        p => p.id !== id
     );
 
     salvarStorage();
-    function aceitarProjeto(id){
+    renderizar();
+    fecharDetalhes();
+}
+
+function aceitarProjeto(id){
 
     const projeto =
     projetos.find(p => p.id === id);
+
+    if(!projeto) return;
 
     projeto.status = "nao-iniciado";
 
@@ -748,6 +754,8 @@ function rejeitarProjeto(id){
 
     const projeto =
     projetos.find(p => p.id === id);
+
+    if(!projeto) return;
 
     projeto.status = "rejeitado";
 
