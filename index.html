@@ -166,7 +166,7 @@ nav a:hover{
 
 .kanban{
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:repeat(5,1fr);
     gap:20px;
 }
 
@@ -447,6 +447,14 @@ select:focus{
 <div class="kanban">
 
     <div class="column"
+         data-status="solicitacao"
+         ondragover="allowDrop(event)"
+         ondrop="drop(event)">
+        <h2>📨 Solicitações</h2>
+        <div id="solicitacao"></div>
+    </div>
+
+    <div class="column"
          data-status="nao-iniciado"
          ondragover="allowDrop(event)"
          ondrop="drop(event)">
@@ -468,6 +476,14 @@ select:focus{
          ondrop="drop(event)">
         <h2>✅ Finalizados</h2>
         <div id="finalizado"></div>
+    </div>
+
+    <div class="column"
+         data-status="rejeitado"
+         ondragover="allowDrop(event)"
+         ondrop="drop(event)">
+        <h2>❌ Rejeitados</h2>
+        <div id="rejeitado"></div>
     </div>
 
 </div>
@@ -625,9 +641,11 @@ function salvarProjeto(){
 
 function renderizar(){
 
-    document.getElementById("nao-iniciado").innerHTML="";
-    document.getElementById("andamento").innerHTML="";
-    document.getElementById("finalizado").innerHTML="";
+    document.getElementById("solicitacao").innerHTML="";
+document.getElementById("nao-iniciado").innerHTML="";
+document.getElementById("andamento").innerHTML="";
+document.getElementById("finalizado").innerHTML="";
+document.getElementById("rejeitado").innerHTML="";
 
     projetos.forEach(p=>{
 
@@ -636,9 +654,39 @@ function renderizar(){
         card.draggable=true;
 
         card.innerHTML=`
-            <h3>${p.nome}</h3>
-            <p>${p.cliente}</p>
-        `;
+    <h3>${p.nome}</h3>
+    <p>${p.cliente}</p>
+
+    ${
+        p.telefone
+        ?
+        `<p>📞 ${p.telefone}</p>`
+        :
+        ""
+    }
+
+    ${
+        p.status === "solicitacao"
+        ?
+        `
+        <br>
+
+        <button
+            class="btn btn-add"
+            onclick="aceitarProjeto(${p.id});event.stopPropagation();">
+            ✔ Aceitar
+        </button>
+
+        <button
+            class="btn btn-danger"
+            onclick="rejeitarProjeto(${p.id});event.stopPropagation();">
+            ✖ Rejeitar
+        </button>
+        `
+        :
+        ""
+    }
+`;
 
         card.onclick=()=>abrirDetalhes(p.id);
 
@@ -684,7 +732,27 @@ function excluirProjeto(id){
     );
 
     salvarStorage();
+    function aceitarProjeto(id){
+
+    const projeto =
+    projetos.find(p => p.id === id);
+
+    projeto.status = "nao-iniciado";
+
+    salvarStorage();
     renderizar();
+}
+
+function rejeitarProjeto(id){
+
+    const projeto =
+    projetos.find(p => p.id === id);
+
+    projeto.status = "rejeitado";
+
+    salvarStorage();
+    renderizar();
+}
     fecharDetalhes();
 }
 
