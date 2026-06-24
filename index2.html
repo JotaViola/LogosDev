@@ -550,56 +550,36 @@ select:focus{
 
         <span class="close" onclick="fecharDetalhes()">&times;</span>
 
-        <input id="dNome" style="font-size:22px;font-weight:bold;">
+        <h2 id="dNome"></h2>
 
         <div class="detail-row">
             <strong>Cliente</strong>
-            <input id="dCliente">
+            <span id="dCliente"></span>
         </div>
 
         <div class="detail-row">
             <strong>Link</strong>
-            <input id="dLink">
+            <a id="dLink" target="_blank" class="link">Abrir Projeto</a>
         </div>
 
         <div class="detail-row">
             <strong>Data de Início</strong>
-            <input type="date" id="dInicio">
+            <span id="dInicio"></span>
         </div>
 
         <div class="detail-row">
             <strong>Data Prazo</strong>
-            <input type="date" id="dPrazo">
+            <span id="dPrazo"></span>
         </div>
-
-        <div class="detail-row">
-    <strong>Status</strong>
-
-    <select id="dStatus">
-        <option value="solicitacao">Solicitação</option>
-        <option value="nao-iniciado">Não Iniciado</option>
-        <option value="andamento">Em Andamento</option>
-        <option value="finalizado">Finalizado</option>
-        <option value="rejeitado">Rejeitado</option>
-    </select>
-</div>
 
         <div class="detail-row">
             <strong>Descrição</strong>
-            <textarea id="dDescricao"></textarea>
+            <p id="dDescricao"></p>
         </div>
 
-       <div class="modal-actions">
-
-    <button class="btn btn-add" id="btnEditar">
-        ✏ Editar
-    </button>
-
-    <button class="btn btn-danger" id="btnExcluir">
-        Excluir Projeto
-    </button>
-
-</div>
+        <button class="btn btn-danger" id="btnExcluir">
+            Excluir Projeto
+        </button>
 
     </div>
 </div>
@@ -648,17 +628,6 @@ function salvarProjeto(){
         return;
     }
 
-    projetos.push(projeto);
-
-    salvarStorage();
-    renderizar();
-
-    fecharCadastro();
-
-    document.querySelectorAll(
-        "#modalCadastro input, #modalCadastro textarea"
-    ).forEach(c => c.value = "");
-}
     projetos.push(projeto);
 
     salvarStorage();
@@ -735,77 +704,36 @@ document.getElementById("rejeitado").innerHTML="";
 
 function abrirDetalhes(id){
 
-    const p = projetos.find(x => x.id === id);
+    const p=projetos.find(x=>x.id===id);
 
-    projetoSelecionado = id;
+    projetoSelecionado=id;
 
-    document.getElementById("dNome").value = p.nome;
-    document.getElementById("dCliente").value = p.cliente;
-    document.getElementById("dInicio").value = p.inicio;
-    document.getElementById("dPrazo").value = p.prazo;
-    document.getElementById("dDescricao").value = p.descricao;
-    document.getElementById("dLink").value = p.link;
-    document.getElementById("dStatus").value = p.status;
+    document.getElementById("dNome").innerText=p.nome;
+    document.getElementById("dCliente").innerText=p.cliente;
+    document.getElementById("dInicio").innerText=p.inicio;
+    document.getElementById("dPrazo").innerText=p.prazo;
+    document.getElementById("dDescricao").innerText=p.descricao;
 
-    document.getElementById("btnEditar").onclick =
-    editarProjeto;
+    document.getElementById("dLink").href=p.link;
 
-    document.getElementById("btnExcluir").onclick = () => {
+    document.getElementById("btnExcluir").onclick=()=>{
         excluirProjeto(id);
     };
 
-    document.getElementById("modalDetalhes").style.display = "flex";
+    document.getElementById("modalDetalhes").style.display="flex";
 }
-function editarProjeto(){
 
-    const projeto =
-    projetos.find(
-        p => p.id === projetoSelecionado
-    );
-
-    projeto.nome =
-    document.getElementById("dNome").value;
-
-    projeto.cliente =
-    document.getElementById("dCliente").value;
-
-    projeto.link =
-    document.getElementById("dLink").value;
-
-    projeto.inicio =
-    document.getElementById("dInicio").value;
-
-    projeto.prazo =
-    document.getElementById("dPrazo").value;
-
-    projeto.descricao =
-    document.getElementById("dDescricao").value;
-
-    projeto.status =
-    document.getElementById("dStatus").value;
-
-    salvarStorage();
-    renderizar();
-
-    alert("Projeto atualizado com sucesso!");
-
-    fecharDetalhes();
-}
 function excluirProjeto(id){
 
     if(!confirm("Deseja excluir este projeto?"))
         return;
 
-    projetos = projetos.filter(
-        p => p.id !== id
+    projetos=projetos.filter(
+        p=>p.id!==id
     );
 
     salvarStorage();
-    renderizar();
-    fecharDetalhes();
-}
-
-function aceitarProjeto(id){
+    function aceitarProjeto(id){
 
     const projeto =
     projetos.find(p => p.id === id);
@@ -825,6 +753,8 @@ function rejeitarProjeto(id){
 
     salvarStorage();
     renderizar();
+}
+    fecharDetalhes();
 }
 
 function allowDrop(ev){
