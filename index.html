@@ -32,18 +32,82 @@ body{
 
 header{
     background:var(--bg-medium);
-    padding:25px;
+
     border-bottom:2px solid var(--gold-dark);
-    text-align:center;
+
+    padding:20px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    flex-wrap:wrap;
+
+    gap:20px;
+
+    border-radius:20px;
+
+    margin:20px;
 }
 
-header h1{
+.logo{
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+.logo-img{
+    width:90px;
+    height:90px;
+
+    border-radius:50%;
+    object-fit:cover;
+
+    border:3px solid var(--gold-light);
+
+    box-shadow:
+        0 0 15px rgba(202,178,115,.4);
+}
+
+.logo h1{
     color:var(--gold-light);
-    margin-bottom:10px;
+    font-size:32px;
 }
 
-header p{
-    color:#ddd;
+.logo p{
+    color:#d5d5d5;
+    margin-top:5px;
+}
+
+nav{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+}
+
+nav a{
+    padding:12px 20px;
+
+    border-radius:12px;
+
+    background:linear-gradient(
+        135deg,
+        var(--gold-light),
+        var(--gold-dark)
+    );
+
+    color:#222;
+
+    font-weight:bold;
+
+    text-decoration:none;
+
+    transition:.3s;
+}
+
+nav a:hover{
+    transform:translateY(-2px);
+    filter:brightness(1.1);
 }
 
 /* SEÇÕES */
@@ -160,9 +224,23 @@ footer{
 <body>
 
 <header>
-    <h1>Logos Dev</h1>
-    <p>Do código ao propósito</p>
-</header>
+
+    <div class="logo">
+
+        <img src="logosdev_logo.jpg" class="logo-img">
+
+        <div>
+            <h1>Logos Dev</h1>
+            <p>Do código ao propósito</p>
+        </div>
+
+    </div>
+
+    <nav>
+        <a href="#portfolio">Portfólio</a>
+        <a href="#solicitar">Solicitar Projeto</a>
+    </nav>
+
 </header>
 
 <section>
@@ -206,7 +284,7 @@ footer{
 ```
 <h2 class="titulo">Solicitar Projeto</h2>
 
-<div class="form-box">
+<div class="modal-content">
 
     <input
         type="text"
