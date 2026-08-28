@@ -1,439 +1,684 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Logos Dev - Sistemas e Automações</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
+    <title>LogosDev | Do código ao propósito </title>
 
-:root{
-    --gold-light:#CAB273;
-    --gold-dark:#917847;
-    --bg-dark:#343639;
-    --bg-medium:#414347;
-    --text-light:#f5f5f5;
-}
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    background:var(--bg-dark);
-    color:var(--text-light);
-}
-
-header{
-    background:var(--bg-medium);
-    border-bottom:2px solid var(--gold-dark);
-    padding:20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    flex-wrap:wrap;
-    gap:20px;
-    border-radius:20px;
-    margin:20px;
-}
-
-.logo h1{
-    color:var(--gold-light);
-    font-size:32px;
-}
-
-.logo p{
-    color:#ccc;
-}
-
-nav{
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-}
-
-nav a{
-    padding:12px 20px;
-    border-radius:12px;
-    text-decoration:none;
-    font-weight:bold;
-    background:linear-gradient(
-        135deg,
-        var(--gold-light),
-        var(--gold-dark)
-    );
-    color:#222;
-    transition:.3s;
-}
-
-nav a:hover{
-    transform:translateY(-2px);
-}
-
-section{
-    max-width:1200px;
-    margin:auto;
-    padding:70px 20px;
-}
-
-.hero{
-    text-align:center;
-}
-
-.hero h2{
-    font-size:52px;
-    color:var(--gold-light);
-    margin-bottom:20px;
-}
-
-.hero p{
-    max-width:800px;
-    margin:auto;
-    color:#ddd;
-    font-size:20px;
-    line-height:1.7;
-}
-
-.hero-buttons{
-    margin-top:35px;
-    display:flex;
-    justify-content:center;
-    gap:15px;
-    flex-wrap:wrap;
-}
-
-.btn{
-    padding:15px 25px;
-    border-radius:12px;
-    text-decoration:none;
-    font-weight:bold;
-    background:linear-gradient(
-        135deg,
-        var(--gold-light),
-        var(--gold-dark)
-    );
-    color:#222;
-}
-
-.titulo{
-    text-align:center;
-    color:var(--gold-light);
-    margin-bottom:35px;
-    font-size:36px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-    gap:20px;
-}
-
-.card{
-    background:var(--bg-medium);
-    border:1px solid var(--gold-dark);
-    border-radius:20px;
-    padding:25px;
-}
-
-.card h3{
-    color:var(--gold-light);
-    margin-bottom:15px;
-}
-
-.card p{
-    color:#ddd;
-    line-height:1.6;
-}
-
-.form-box{
-    background:var(--bg-medium);
-    border:1px solid var(--gold-dark);
-    border-radius:20px;
-    padding:30px;
-    max-width:700px;
-    margin:auto;
-}
-
-input,
-textarea{
-    width:100%;
-    padding:14px;
-    margin-bottom:15px;
-    border-radius:10px;
-    border:1px solid var(--gold-dark);
-    background:var(--bg-dark);
-    color:white;
-}
-
-textarea{
-    min-height:180px;
-    resize:vertical;
-}
-
-button{
-    width:100%;
-    padding:15px;
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
-    font-weight:bold;
-    background:linear-gradient(
-        135deg,
-        var(--gold-light),
-        var(--gold-dark)
-    );
-    color:#222;
-    font-size:16px;
-}
-
-button:hover{
-    opacity:.9;
-}
-
-footer{
-    text-align:center;
-    padding:30px;
-    border-top:1px solid var(--gold-dark);
-    color:#bbb;
-    margin-top:50px;
-}
-
-.admin-link{
-    display:block;
-    margin-top:15px;
-    font-size:12px;
-    color:#777;
-    text-decoration:none;
-}
-
-.admin-link:hover{
-    color:var(--gold-light);
-}
-
-.logo{
-    display:flex;
-    align-items:center;
-    gap:20px;
-}
-
-.logo-img{
-    width:80px;
-    height:80px;
-
-    border-radius:50%;
-
-    object-fit:cover;
-
-    border:3px solid var(--gold-light);
-
-    box-shadow:
-        0 0 15px rgba(202,178,115,.4);
-}
-</style>
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header>
+    <!-- =====================================================
+         CABEÇALHO
+    ====================================================== -->
 
-    <div class="logo">
+    <header class="header">
 
-    <img
-        src="logosdev_logo.jpg"
-        alt="Logo Logos Dev"
-        class="logo-img"
-    >
-
-    <div>
-        <h1>Logos Dev</h1>
-        <p>Do código ao propósito</p>
-    </div>
-
+        <div class="logo-image">
+    <img src="logo.jpg" alt="LOGOS DEV">
 </div>
 
-    <nav>
-        <a href="#servicos">Serviços</a>
-        <a href="#beneficios">Benefícios</a>
-        <a href="#contato">Solicitar Projeto</a>
-    </nav>
 
-</header>
+        <nav>
 
-<section class="hero">
+            <a href="#inicio">
+                Início
+            </a>
 
-    <h2>Automatize sua Empresa</h2>
+            <a href="#empresa">
+                Quem Somos
+            </a>
 
-    <p>
-        Desenvolvemos sistemas personalizados,
-        automações, dashboards, ERPs e soluções
-        digitais para reduzir trabalho manual,
-        aumentar produtividade e melhorar
-        o controle do seu negócio.
-    </p>
+            <a href="#solucoes">
+                Soluções
+            </a>
 
-    <div class="hero-buttons">
-        <a href="#contato" class="btn">
-            Solicitar Projeto
-        </a>
-    </div>
+            <a href="#projeto">
+                Solicitar Projeto
+            </a>
 
-</section>
+            <a
+                href="admin.html"
+                class="admin-link"
+            >
+                Área Administrativa
+            </a>
 
-<section id="servicos">
+        </nav>
 
-    <h2 class="titulo">Serviços</h2>
+    </header>
 
-    <div class="grid">
 
-        <div class="card">
-            <h3>Sistemas Web</h3>
-            <p>
-                Desenvolvimento de sistemas sob medida
-                para sua operação.
-            </p>
-        </div>
+    <main>
 
-        <div class="card">
-            <h3>Automações</h3>
-            <p>
-                Automatização de tarefas repetitivas
-                e processos internos.
-            </p>
-        </div>
+        <!-- =====================================================
+             HERO
+        ====================================================== -->
 
-        <div class="card">
-            <h3>Dashboards</h3>
-            <p>
-                Indicadores em tempo real para gestão.
-            </p>
-        </div>
-
-        <div class="card">
-            <h3>ERP Personalizado</h3>
-            <p>
-                Soluções adaptadas ao fluxo da empresa.
-            </p>
-        </div>
-
-    </div>
-
-</section>
-
-<section id="beneficios">
-
-    <h2 class="titulo">Benefícios</h2>
-
-    <div class="grid">
-
-        <div class="card">
-            <h3>Mais Produtividade</h3>
-            <p>Reduza tempo gasto em tarefas manuais.</p>
-        </div>
-
-        <div class="card">
-            <h3>Menos Erros</h3>
-            <p>Processos padronizados e automatizados.</p>
-        </div>
-
-        <div class="card">
-            <h3>Mais Controle</h3>
-            <p>Dados centralizados e acessíveis.</p>
-        </div>
-
-    </div>
-
-</section>
-
-<section id="contato">
-
-    <h2 class="titulo">Solicitar Projeto</h2>
-
-    <div class="form-box">
-
-        <input
-            type="text"
-            id="nome"
-            placeholder="Nome"
+        <section
+            id="inicio"
+            class="hero"
         >
 
-        <input
-            type="tel"
-            id="telefone"
-            placeholder="Telefone"
+            <div class="hero-content">
+
+                <span class="tag">
+                    TECNOLOGIA • AUTOMAÇÃO • SISTEMAS
+                </span>
+
+                <h1>
+
+                    Transformamos ideias em
+
+                    <span>
+                        soluções tecnológicas.
+                    </span>
+
+                </h1>
+
+                <p>
+
+                    Desenvolvemos sistemas personalizados
+                    para automatizar processos, solucionar
+                    problemas e transformar necessidades
+                    em tecnologia.
+
+                </p>
+
+                <a
+                    href="#projeto"
+                    class="btn"
+                >
+                    Solicitar um projeto
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             QUEM SOMOS
+        ====================================================== -->
+
+        <section
+            id="empresa"
+            class="section"
         >
 
-        <textarea
-            id="descricao"
-            placeholder="Descreva seu projeto"
-        ></textarea>
+            <div class="section-title">
 
-        <button onclick="enviarProjeto()">
-            Enviar Solicitação
-        </button>
+                <span>
+                    01
+                </span>
+
+                <h2>
+                    Quem Somos
+                </h2>
+
+            </div>
+
+
+            <div class="about-grid">
+
+                <div class="about-text">
+
+                    <h3>
+                        Tecnologia com propósito.
+                    </h3>
+
+                    <p>
+
+                        Somos uma empresa focada no
+                        desenvolvimento de sistemas e
+                        soluções tecnológicas capazes de
+                        automatizar processos, facilitar
+                        operações e criar novas possibilidades
+                        para nossos clientes.
+
+                    </p>
+
+                    <p>
+
+                        Nosso objetivo é utilizar a tecnologia
+                        de maneira prática, criando soluções
+                        que realmente façam diferença no
+                        dia a dia.
+
+                    </p>
+
+                </div>
+
+
+                <div class="mission-card">
+
+                    <div class="mission-item">
+
+                        <strong>
+                            01
+                        </strong>
+
+                        <div>
+
+                            <h4>
+                                Nosso objetivo
+                            </h4>
+
+                            <p>
+
+                                Trazer soluções com ajuda
+                                da tecnologia para
+                                automatizações.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="mission-item">
+
+                        <strong>
+                            02
+                        </strong>
+
+                        <div>
+
+                            <h4>
+                                Por que fazemos?
+                            </h4>
+
+                            <p>
+
+                                Para trazer lucros a
+                                vendedores, conhecimento
+                                aos aplicadores e propósito
+                                de continuidade.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="mission-item">
+
+                        <strong>
+                            03
+                        </strong>
+
+                        <div>
+
+                            <h4>
+                                Aplicabilidade
+                            </h4>
+
+                            <p>
+
+                                Para o que o cliente desejar,
+                                desde ERP até sistemas
+                                de segurança.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="mission-item">
+
+                        <strong>
+                            04
+                        </strong>
+
+                        <div>
+
+                            <h4>
+                                O que fazemos
+                            </h4>
+
+                            <p>
+                                Sistemas personalizados.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SOLUÇÕES
+        ====================================================== -->
+
+        <section
+            id="solucoes"
+            class="section dark-section"
+        >
+
+            <div class="section-title">
+
+                <span>
+                    02
+                </span>
+
+                <h2>
+                    O que fazemos
+                </h2>
+
+            </div>
+
+
+            <div class="services-grid">
+
+                <div class="service-card">
+
+                    <div class="service-number">
+                        01
+                    </div>
+
+                    <h3>
+                        ERP
+                    </h3>
+
+                    <p>
+
+                        Sistemas para gestão empresarial,
+                        estoque, vendas, clientes e
+                        operações.
+
+                    </p>
+
+                </div>
+
+
+                <div class="service-card">
+
+                    <div class="service-number">
+                        02
+                    </div>
+
+                    <h3>
+                        Automação
+                    </h3>
+
+                    <p>
+
+                        Automatização de processos para
+                        reduzir trabalho manual e aumentar
+                        produtividade.
+
+                    </p>
+
+                </div>
+
+
+                <div class="service-card">
+
+                    <div class="service-number">
+                        03
+                    </div>
+
+                    <h3>
+                        Sistemas Personalizados
+                    </h3>
+
+                    <p>
+
+                        Desenvolvemos sistemas de acordo
+                        com a necessidade específica de
+                        cada cliente.
+
+                    </p>
+
+                </div>
+
+
+                <div class="service-card">
+
+                    <div class="service-number">
+                        04
+                    </div>
+
+                    <h3>
+                        Sistemas de Segurança
+                    </h3>
+
+                    <p>
+
+                        Soluções tecnológicas voltadas
+                        para controle, monitoramento
+                        e segurança.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             FORMULÁRIO DE PROJETO
+        ====================================================== -->
+
+        <section
+            id="projeto"
+            class="section project-section"
+        >
+
+            <div class="section-title">
+
+                <span>
+                    03
+                </span>
+
+                <h2>
+                    Solicite seu projeto
+                </h2>
+
+            </div>
+
+
+            <div class="project-intro">
+
+                <h3>
+                    Tem uma ideia?
+                </h3>
+
+                <p>
+
+                    Conte-nos o que você precisa.
+                    Nossa equipe irá analisar sua
+                    solicitação e transformar sua
+                    necessidade em uma solução
+                    tecnológica.
+
+                </p>
+
+            </div>
+
+
+            <form
+                id="projectForm"
+                class="project-form"
+            >
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="clienteNome">
+                            Nome *
+                        </label>
+
+                        <input
+                            type="text"
+                            id="clienteNome"
+                            placeholder="Seu nome"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="clienteEmpresa">
+                            Empresa
+                        </label>
+
+                        <input
+                            type="text"
+                            id="clienteEmpresa"
+                            placeholder="Nome da empresa"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="clienteEmail">
+                            E-mail *
+                        </label>
+
+                        <input
+                            type="email"
+                            id="clienteEmail"
+                            placeholder="seu@email.com"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="clienteTelefone">
+                            Telefone
+                        </label>
+
+                        <input
+                            type="text"
+                            id="clienteTelefone"
+                            placeholder="(00) 00000-0000"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="projetoNome">
+                        Nome do projeto *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="projetoNome"
+                        placeholder="Ex.: Sistema de gestão"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="projetoTipo">
+                            Tipo de sistema *
+                        </label>
+
+                        <select
+                            id="projetoTipo"
+                            required
+                        >
+
+                            <option value="">
+                                Selecione
+                            </option>
+
+                            <option value="ERP">
+                                ERP
+                            </option>
+
+                            <option value="Automação">
+                                Automação
+                            </option>
+
+                            <option value="Sistema Web">
+                                Sistema Web
+                            </option>
+
+                            <option value="Sistema Desktop">
+                                Sistema Desktop
+                            </option>
+
+                            <option value="Sistema de Segurança">
+                                Sistema de Segurança
+                            </option>
+
+                            <option value="Aplicativo">
+                                Aplicativo
+                            </option>
+
+                            <option value="Outro">
+                                Outro
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="prazoDesejado">
+                            Prazo desejado
+                        </label>
+
+                        <input
+                            type="date"
+                            id="prazoDesejado"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="projetoDescricao">
+                        Descrição do projeto *
+                    </label>
+
+                    <textarea
+                        id="projetoDescricao"
+                        rows="7"
+                        placeholder="Explique o que você precisa..."
+                        required
+                    ></textarea>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn submit-btn"
+                >
+                    Enviar solicitação
+                </button>
+
+            </form>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         RODAPÉ
+    ====================================================== -->
+
+    <footer>
+
+        <div>
+
+            <strong>
+                SUA EMPRESA
+            </strong>
+
+            <p>
+                Soluções tecnológicas com propósito.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a href="admin.html">
+                Área Administrativa
+            </a>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =====================================================
+         MODAL SUCESSO
+    ====================================================== -->
+
+    <div
+        id="successModal"
+        class="modal"
+    >
+
+        <div class="modal-box success-box">
+
+            <button
+                type="button"
+                class="close-modal"
+                onclick="fecharModal()"
+            >
+                ×
+            </button>
+
+            <div class="success-icon">
+                ✓
+            </div>
+
+            <h2>
+                Solicitação enviada!
+            </h2>
+
+            <p>
+
+                O projeto foi salvo com sucesso
+                e está disponível na Área
+                Administrativa.
+
+            </p>
+
+            <button
+                type="button"
+                class="btn"
+                onclick="fecharModal()"
+            >
+                Fechar
+            </button>
+
+        </div>
 
     </div>
 
-</section>
 
-<footer>
-
-    <p>© 2026 Logos Dev</p>
-
-    <a href="index2.html" class="admin-link">
-        Área Administrativa
-    </a>
-
-</footer>
-
-<script>
-
-function enviarProjeto(){
-
-    const nome =
-        document.getElementById("nome").value.trim();
-
-    const telefone =
-        document.getElementById("telefone").value.trim();
-
-    const descricao =
-        document.getElementById("descricao").value.trim();
-
-    if(!nome || !telefone || !descricao){
-        alert("Preencha todos os campos.");
-        return;
-    }
-
-    const projetos =
-        JSON.parse(localStorage.getItem("projetos")) || [];
-
-    projetos.push({
-        nome,
-        telefone,
-        descricao,
-        status:"Solicitado",
-        data:new Date().toLocaleDateString("pt-BR")
-    });
-
-    localStorage.setItem(
-        "projetos",
-        JSON.stringify(projetos)
-    );
-
-    alert("Projeto enviado com sucesso!");
-
-    document.getElementById("nome").value="";
-    document.getElementById("telefone").value="";
-    document.getElementById("descricao").value="";
-}
-
-</script>
+    <script src="script.js"></script>
 
 </body>
+
 </html>
-```
