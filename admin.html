@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Área Administrativa | Projetos
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+
+<body class="admin-body">
+
+
+    <!-- =====================================================
+         CABEÇALHO
+    ====================================================== -->
+
+    <header class="admin-header">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                S
+            </div>
+
+            <span>
+                SUA EMPRESA
+            </span>
+
+        </div>
+
+
+        <div class="admin-actions">
+
+            <span>
+                Área Administrativa
+            </span>
+
+            <a
+                href="index.html"
+                class="back-admin"
+            >
+                ← Site
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         CONTEÚDO
+    ====================================================== -->
+
+    <main class="admin-content">
+
+
+        <div class="admin-title">
+
+            <div>
+
+                <span class="tag">
+                    GESTÃO DE PROJETOS
+                </span>
+
+                <h1>
+                    Projetos
+                </h1>
+
+                <p>
+                    Gerencie todas as solicitações.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="refresh-btn"
+                onclick="renderKanban()"
+            >
+                ↻ Atualizar
+            </button>
+
+        </div>
+
+
+        <!-- =====================================================
+             ESTATÍSTICAS
+        ====================================================== -->
+
+        <div class="stats">
+
+            <div class="stat-card">
+
+                <span>
+                    Total
+                </span>
+
+                <strong id="totalProjetos">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>
+                    Solicitados
+                </span>
+
+                <strong id="totalSolicitados">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>
+                    Não iniciados
+                </span>
+
+                <strong id="totalNaoIniciados">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>
+                    Em andamento
+                </span>
+
+                <strong id="totalAndamento">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>
+                    Concluídos
+                </span>
+
+                <strong id="totalConcluidos">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span>
+                    Rejeitados
+                </span>
+
+                <strong id="totalRejeitados">
+                    0
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             KANBAN
+        ====================================================== -->
+
+        <div class="kanban">
+
+
+            <!-- PROJETO SOLICITADO -->
+
+            <div
+                class="kanban-column solicitado"
+            >
+
+                <div class="column-header">
+
+                    <h2>
+                        Projeto Solicitado
+                    </h2>
+
+                    <span id="count-solicitado">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="drop-zone"
+                    id="solicitado"
+                    ondragover="allowDrop(event)"
+                    ondrop="drop(event)"
+                ></div>
+
+            </div>
+
+
+            <!-- NÃO INICIADO -->
+
+            <div
+                class="kanban-column nao-iniciado"
+            >
+
+                <div class="column-header">
+
+                    <h2>
+                        Não Iniciado
+                    </h2>
+
+                    <span id="count-nao-iniciado">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="drop-zone"
+                    id="nao-iniciado"
+                    ondragover="allowDrop(event)"
+                    ondrop="drop(event)"
+                ></div>
+
+            </div>
+
+
+            <!-- ANDAMENTO -->
+
+            <div
+                class="kanban-column andamento"
+            >
+
+                <div class="column-header">
+
+                    <h2>
+                        Em Andamento
+                    </h2>
+
+                    <span id="count-andamento">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="drop-zone"
+                    id="andamento"
+                    ondragover="allowDrop(event)"
+                    ondrop="drop(event)"
+                ></div>
+
+            </div>
+
+
+            <!-- CONCLUÍDO -->
+
+            <div
+                class="kanban-column concluido"
+            >
+
+                <div class="column-header">
+
+                    <h2>
+                        Concluído
+                    </h2>
+
+                    <span id="count-concluido">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="drop-zone"
+                    id="concluido"
+                    ondragover="allowDrop(event)"
+                    ondrop="drop(event)"
+                ></div>
+
+            </div>
+
+
+            <!-- REJEITADO -->
+
+            <div
+                class="kanban-column rejeitado"
+            >
+
+                <div class="column-header">
+
+                    <h2>
+                        Rejeitado
+                    </h2>
+
+                    <span id="count-rejeitado">
+                        0
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="drop-zone"
+                    id="rejeitado"
+                    ondragover="allowDrop(event)"
+                    ondrop="drop(event)"
+                ></div>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         MODAL DE EDIÇÃO
+    ====================================================== -->
+
+    <div
+        id="projectModal"
+        class="modal"
+    >
+
+        <div class="modal-box project-modal">
+
+
+            <button
+                type="button"
+                class="close-modal"
+                onclick="fecharProjeto()"
+            >
+                ×
+            </button>
+
+
+            <div class="modal-header">
+
+                <span class="tag">
+                    PROJETO
+                </span>
+
+                <h2>
+                    Editar projeto
+                </h2>
+
+            </div>
+
+
+            <form id="editProjectForm">
+
+
+                <input
+                    type="hidden"
+                    id="editId"
+                >
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Nome do projeto
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editNome"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Tipo
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editTipo"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Cliente
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editCliente"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Empresa
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editEmpresa"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            E-mail
+                        </label>
+
+                        <input
+                            type="email"
+                            id="editEmail"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Telefone
+                        </label>
+
+                        <input
+                            type="text"
+                            id="editTelefone"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label>
+                            Data de início
+                        </label>
+
+                        <input
+                            type="date"
+                            id="editInicio"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Prazo
+                        </label>
+
+                        <input
+                            type="date"
+                            id="editPrazo"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        GitHub
+                    </label>
+
+                    <input
+                        type="url"
+                        id="editGithub"
+                        placeholder="https://github.com/..."
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Link do projeto
+                    </label>
+
+                    <input
+                        type="url"
+                        id="editLink"
+                        placeholder="https://..."
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Status
+                    </label>
+
+                    <select id="editStatus">
+
+                        <option value="solicitado">
+                            Projeto Solicitado
+                        </option>
+
+                        <option value="nao-iniciado">
+                            Não Iniciado
+                        </option>
+
+                        <option value="andamento">
+                            Em Andamento
+                        </option>
+
+                        <option value="concluido">
+                            Concluído
+                        </option>
+
+                        <option value="rejeitado">
+                            Rejeitado
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Descrição
+                    </label>
+
+                    <textarea
+                        id="editDescricao"
+                        rows="6"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Observações administrativas
+                    </label>
+
+                    <textarea
+                        id="editObservacoes"
+                        rows="4"
+                        placeholder="Anotações internas..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="modal-buttons">
+
+
+                    <button
+                        type="button"
+                        class="delete-btn"
+                        onclick="excluirProjeto()"
+                    >
+                        Excluir
+                    </button>
+
+
+                    <div>
+
+                        <button
+                            type="button"
+                            class="cancel-btn"
+                            onclick="fecharProjeto()"
+                        >
+                            Cancelar
+                        </button>
+
+
+                        <button
+                            type="submit"
+                            class="btn"
+                        >
+                            Salvar alterações
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
