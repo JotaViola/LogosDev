@@ -44,6 +44,14 @@
             </span>
 
             <a
+                href="LogosMessage_integrado.html"
+                class="back-admin"
+                title="Abrir LogosMessage"
+            >
+                💬 Mensagens
+            </a>
+
+            <a
                 href="index.html"
                 class="back-admin"
             >
@@ -641,6 +649,122 @@
 
 
     <script src="script.js"></script>
+
+    <!-- =====================================================
+         INTEGRAÇÃO: ADMIN -> LOGOSMESSAGE
+         O index.html envia somente para o Admin (chave "projetos").
+         Quando o Admin recebe a solicitação, ela é colocada na fila
+         "logosdev_project_notifications" para o LogosMessage.
+         O LogosMessage então publica no canal Vendas.
+    ====================================================== -->
+    <script>
+        (function () {
+            const PROJECTS_KEY = "projetos";
+            const LOGOSMESSAGE_INBOX_KEY = "logosdev_project_notifications";
+            const FORWARDED_KEY = "logosdev_project_forwarded_ids";
+
+            function readArray(key) {
+                try {
+                    const value = JSON.parse(localStorage.getItem(key) || "[]");
+                    return Array.isArray(value) ? value : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function saveArray(key, value) {
+                localStorage.setItem(key, JSON.stringify(value));
+            }
+
+            function getProjectId(project) {
+                if (!project) return null;
+                return project.id || project.projectId || project.codigo || project.createdAt || null;
+            }
+
+            function encaminharProjetosParaLogosMessage(projectList) {
+                if (!Array.isArray(projectList) || !projectList.length) return;
+
+                const fila = readArray(LOGOSMESSAGE_INBOX_KEY);
+                const encaminhados = readArray(FORWARDED_KEY);
+                const encaminhadosSet = new Set(encaminhados.map(String));
+                let filaAlterada = false;
+                let idsAlterados = false;
+
+                projectList.forEach(function (project) {
+                    const projectId = getProjectId(project);
+                    if (!projectId) return;
+
+                    const id = String(projectId);
+
+                    // Não encaminha novamente o mesmo projeto.
+                    if (encaminhadosSet.has(id)) return;
+
+                    // Também evita duplicar caso ele já esteja aguardando no Inbox.
+                    const alreadyQueued = fila.some(function (item) {
+                        return item && String(item.id || item.projectId || item.codigo || "") === id;
+                    });
+
+                    if (!alreadyQueued) {
+                        fila.push({
+                            ...project,
+                            id: project.id || id,
+                            origem: project.origem || "admin.html",
+                            enviadoPeloAdminEm: Date.now()
+                        });
+                        filaAlterada = true;
+                    }
+
+                    encaminhados.push(id);
+                    encaminhadosSet.add(id);
+                    idsAlterados = true;
+                });
+
+                if (filaAlterada) {
+                    saveArray(LOGOSMESSAGE_INBOX_KEY, fila);
+                }
+
+                if (idsAlterados) {
+                    // Mantém somente os últimos 1000 IDs para não crescer indefinidamente.
+                    saveArray(FORWARDED_KEY, encaminhados.slice(-1000));
+                }
+            }
+
+            function sincronizarDoStorage(projetosJSON) {
+                try {
+                    const lista = JSON.parse(projetosJSON || "[]");
+                    if (Array.isArray(lista)) {
+                        encaminharProjetosParaLogosMessage(lista);
+                    }
+                } catch (e) {
+                    console.error("Erro ao encaminhar projetos para o LogosMessage:", e);
+                }
+            }
+
+            // Quando uma nova solicitação chega do index.html.
+            window.addEventListener("storage", function (event) {
+                if (event.key !== PROJECTS_KEY) return;
+
+                sincronizarDoStorage(event.newValue);
+
+                try {
+                    if (typeof projetos !== "undefined") {
+                        projetos = JSON.parse(event.newValue || "[]");
+                    }
+                    if (typeof renderizar === "function") {
+                        renderizar();
+                    }
+                } catch (e) {
+                    window.location.reload();
+                }
+            });
+
+            // Se o Admin for aberto depois que o cliente já enviou o projeto,
+            // também faz o encaminhamento.
+            window.addEventListener("load", function () {
+                sincronizarDoStorage(localStorage.getItem(PROJECTS_KEY));
+            });
+        })();
+    </script>
 
 </body>
 
