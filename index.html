@@ -5,9 +5,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>LogosDev | Do código ao propósito </title>
+    <title>LogosDev | Do código ao propósito</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* =====================================================
+           LOGO NA ÁREA PRINCIPAL
+        ====================================================== */
+
+        .hero {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 50px;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 55%;
+        }
+
+        .hero-logo {
+            position: relative;
+            z-index: 1;
+            width: 45%;
+            min-height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+        }
+
+        .hero-logo img {
+            display: block;
+            width: min(460px, 90%);
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 25px 45px rgba(0, 0, 0, 0.45));
+            transition:
+                transform 0.35s ease,
+                filter 0.35s ease;
+        }
+
+        .hero-logo img:hover {
+            transform: scale(1.03);
+            filter: drop-shadow(0 28px 55px rgba(0, 0, 0, 0.55));
+        }
+
+        /* =====================================================
+           RESPONSIVIDADE
+        ====================================================== */
+
+        @media (max-width: 900px) {
+
+            .hero {
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 20px;
+                padding-top: 60px;
+                padding-bottom: 60px;
+            }
+
+            .hero-content {
+                width: 100%;
+            }
+
+            .hero-logo {
+                width: 100%;
+                min-height: auto;
+                margin: 20px 0 0;
+                justify-content: center;
+            }
+
+            .hero-logo img {
+                width: min(340px, 75%);
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .hero-logo img {
+                width: min(280px, 70%);
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -17,11 +104,6 @@
     ====================================================== -->
 
     <header class="header">
-
-        <div class="logo-image">
-    <img src="logosdev_logo.jpg" alt="LOGOS DEV">
-</div>
-
 
         <nav>
 
@@ -98,6 +180,20 @@
 
             </div>
 
+
+            <!-- =================================================
+                 LOGO DO LADO DIREITO DO HERO
+            ================================================== -->
+
+            <div class="hero-logo">
+
+                <img
+                    src="logosdev_logo.jpg"
+                    alt="LOGOS DEV"
+                >
+
+            </div>
+
         </section>
 
 
@@ -141,6 +237,7 @@
                         para nossos clientes.
 
                     </p>
+
 
                     <p>
 
@@ -648,13 +745,16 @@
                 ×
             </button>
 
+
             <div class="success-icon">
                 ✓
             </div>
 
+
             <h2>
                 Solicitação enviada!
             </h2>
+
 
             <p>
 
@@ -663,6 +763,7 @@
                 Administrativa.
 
             </p>
+
 
             <button
                 type="button"
