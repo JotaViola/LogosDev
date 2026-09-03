@@ -652,16 +652,17 @@
 
     <!-- =====================================================
          INTEGRAÇÃO: ADMIN -> LOGOSMESSAGE
-         O index.html envia somente para o Admin (chave "projetos").
-         Quando o Admin recebe a solicitação, ela é colocada na fila
+         O index.html salva o projeto na mesma chave usada pelo script.js: "projetosEmpresa".
+         Quando o Admin detecta a solicitação salva pelo script.js, ela é colocada na fila
          "logosdev_project_notifications" para o LogosMessage.
          O LogosMessage então publica no canal Vendas.
     ====================================================== -->
     <script>
         (function () {
-            const PROJECTS_KEY = "projetos";
+            const PROJECTS_KEY = "projetosEmpresa";
             const LOGOSMESSAGE_INBOX_KEY = "logosdev_project_notifications";
             const FORWARDED_KEY = "logosdev_project_forwarded_ids";
+            const DEVELOPMENT_FORWARDED_KEY = "logosdev_project_development_forwarded_ids";
 
             function readArray(key) {
                 try {
@@ -709,6 +710,7 @@
                             ...project,
                             id: project.id || id,
                             origem: project.origem || "admin.html",
+                            destinoCanal: "vendas",
                             enviadoPeloAdminEm: Date.now()
                         });
                         filaAlterada = true;
@@ -729,6 +731,58 @@
                 }
             }
 
+            function encaminharMudancasParaDesenvolvimento(projetosAnteriores, projetosAtuais) {
+                if (!Array.isArray(projetosAtuais)) return;
+
+                const fila = readArray(LOGOSMESSAGE_INBOX_KEY);
+                const encaminhados = readArray(DEVELOPMENT_FORWARDED_KEY);
+                const encaminhadosSet = new Set(encaminhados.map(String));
+                const anterioresMap = new Map(
+                    (Array.isArray(projetosAnteriores) ? projetosAnteriores : []).map(function (project) {
+                        return [String(getProjectId(project) || ""), project];
+                    })
+                );
+
+                let filaAlterada = false;
+                let idsAlterados = false;
+
+                projetosAtuais.forEach(function (project) {
+                    const projectId = getProjectId(project);
+                    if (!projectId || project.status !== "nao-iniciado") return;
+
+                    const id = String(projectId);
+                    const anterior = anterioresMap.get(id);
+                    const statusAnterior = anterior ? anterior.status : null;
+
+                    // Só dispara quando o projeto entra no status Não Iniciado.
+                    if (statusAnterior === "nao-iniciado" || encaminhadosSet.has(id)) return;
+
+                    const alreadyQueued = fila.some(function (item) {
+                        return item && String(item.projectId || item.id || "") === id &&
+                            String(item.destinoCanal || "").toLowerCase() === "desenvolvimento";
+                    });
+
+                    if (!alreadyQueued) {
+                        fila.push({
+                            ...project,
+                            id: project.id || id,
+                            projectId: id,
+                            destinoCanal: "desenvolvimento",
+                            origem: "admin.html",
+                            enviadoPeloAdminEm: Date.now()
+                        });
+                        filaAlterada = true;
+                    }
+
+                    encaminhados.push(id);
+                    encaminhadosSet.add(id);
+                    idsAlterados = true;
+                });
+
+                if (filaAlterada) saveArray(LOGOSMESSAGE_INBOX_KEY, fila);
+                if (idsAlterados) saveArray(DEVELOPMENT_FORWARDED_KEY, encaminhados.slice(-1000));
+            }
+
             function sincronizarDoStorage(projetosJSON) {
                 try {
                     const lista = JSON.parse(projetosJSON || "[]");
@@ -740,28 +794,131 @@
                 }
             }
 
-            // Quando uma nova solicitação chega do index.html.
-            window.addEventListener("storage", function (event) {
-                if (event.key !== PROJECTS_KEY) return;
+            // Último estado conhecido. É usado para detectar mudanças
+            // mesmo quando os arquivos são abertos diretamente pelo Windows.
+            let ultimoEstadoProjetos = null;
 
-                sincronizarDoStorage(event.newValue);
+            function lerProjetosDoStorage() {
+                try {
+                    const lista = JSON.parse(
+                        localStorage.getItem(PROJECTS_KEY) || "[]"
+                    );
+                    return Array.isArray(lista) ? lista : [];
+                } catch (e) {
+                    return [];
+                }
+            }
+
+            function sincronizarTudo() {
+                const atuais = lerProjetosDoStorage();
+
+                // Primeira leitura: envia os projetos existentes para Vendas,
+                // mas não considera os projetos já existentes como uma
+                // mudança de status para Desenvolvimento.
+                if (ultimoEstadoProjetos === null) {
+                    sincronizarDoStorage(JSON.stringify(atuais));
+                    ultimoEstadoProjetos = JSON.parse(JSON.stringify(atuais));
+                    return;
+                }
+
+                const anteriores = ultimoEstadoProjetos;
+
+                if (JSON.stringify(atuais) === JSON.stringify(anteriores)) {
+                    return;
+                }
+
+                // Este é exatamente o mesmo objeto salvo pelo script.js.
+                // O Admin apenas encaminha esse projeto para o LogosMessage.
+                sincronizarDoStorage(JSON.stringify(atuais));
+
+                try {
+                    encaminharMudancasParaDesenvolvimento(
+                        anteriores,
+                        atuais
+                    );
+                } catch (e) {
+                    console.error(
+                        "Erro ao encaminhar projeto para Desenvolvimento:",
+                        e
+                    );
+                }
+
+                ultimoEstadoProjetos =
+                    JSON.parse(JSON.stringify(atuais));
 
                 try {
                     if (typeof projetos !== "undefined") {
-                        projetos = JSON.parse(event.newValue || "[]");
+                        projetos = atuais;
                     }
                     if (typeof renderizar === "function") {
                         renderizar();
                     }
+                    if (typeof renderKanban === "function") {
+                        renderKanban();
+                    }
                 } catch (e) {
-                    window.location.reload();
+                    console.error("Erro ao atualizar o Kanban:", e);
+                }
+            }
+
+            // Quando o storage event estiver disponível, reage imediatamente.
+            window.addEventListener("storage", function (event) {
+                if (event.key !== PROJECTS_KEY) return;
+
+                let anteriores = [];
+                let atuais = [];
+
+                try {
+                    anteriores = JSON.parse(event.oldValue || "[]");
+                    atuais = JSON.parse(event.newValue || "[]");
+                } catch (e) {
+                    anteriores = [];
+                    atuais = [];
+                }
+
+                if (!Array.isArray(atuais)) return;
+
+                sincronizarDoStorage(JSON.stringify(atuais));
+
+                try {
+                    encaminharMudancasParaDesenvolvimento(
+                        anteriores,
+                        atuais
+                    );
+                } catch (e) {
+                    console.error(
+                        "Erro ao encaminhar projeto para Desenvolvimento:",
+                        e
+                    );
+                }
+
+                ultimoEstadoProjetos =
+                    JSON.parse(JSON.stringify(atuais));
+
+                try {
+                    if (typeof projetos !== "undefined") {
+                        projetos = atuais;
+                    }
+                    if (typeof renderizar === "function") {
+                        renderizar();
+                    }
+                    if (typeof renderKanban === "function") {
+                        renderKanban();
+                    }
+                } catch (e) {
+                    console.error("Erro ao atualizar o Kanban:", e);
                 }
             });
 
-            // Se o Admin for aberto depois que o cliente já enviou o projeto,
-            // também faz o encaminhamento.
+            // Inicializa e verifica periodicamente. O polling é importante
+            // para arquivos abertos diretamente pelo Windows, onde o evento
+            // storage pode ser inconsistente dependendo do navegador.
             window.addEventListener("load", function () {
-                sincronizarDoStorage(localStorage.getItem(PROJECTS_KEY));
+                sincronizarTudo();
+
+                setInterval(function () {
+                    sincronizarTudo();
+                }, 500);
             });
         })();
     </script>
