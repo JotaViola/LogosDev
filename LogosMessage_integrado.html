@@ -5586,33 +5586,33 @@
             return false;
         }
 
-        // O canal atual do workspace usa o ID "projetos" e o nome "vendas".
-        // Mantemos o ID existente para não quebrar dados antigos.
-        let channel = state.channels.find(
-            channel => channel.id === "projetos" ||
-                String(channel.name || "").toLowerCase() === "vendas"
-        );
-
-        if (!channel) {
-            channel = {
-                id: "projetos",
-                name: "vendas",
-                topic: "Vendas em andamento",
-                private: true,
-                members: [state.currentUserId || "joao"]
-            };
-
-            state.channels.push(channel);
-        }
-
-        if (!state.messages[channel.id]) {
-            state.messages[channel.id] = [];
-        }
-
         let changed = false;
 
         incoming.forEach(project => {
             if (!project || !project.id) return;
+
+            const destino = String(project.destinoCanal || "vendas").toLowerCase();
+            const isDevelopment = destino === "desenvolvimento";
+            const targetId = isDevelopment ? "desenvolvimento" : "projetos";
+            const targetName = isDevelopment ? "desenvolvimento" : "vendas";
+            const targetTopic = isDevelopment ? "Desenvolvimento e programação" : "Vendas em andamento";
+
+            let channel = state.channels.find(channel => channel.id === targetId);
+
+            if (!channel) {
+                channel = {
+                    id: targetId,
+                    name: targetName,
+                    topic: targetTopic,
+                    private: true,
+                    members: [state.currentUserId || "joao"]
+                };
+                state.channels.push(channel);
+            }
+
+            if (!state.messages[channel.id]) {
+                state.messages[channel.id] = [];
+            }
 
             const alreadyExists = state.messages[channel.id].some(
                 message => message.projectId === project.id
@@ -5624,15 +5624,23 @@
                 ? new Date(project.prazo + "T00:00:00").toLocaleDateString("pt-BR")
                 : "Não informado";
 
-            const text =
-                "🚨 NOVA SOLICITAÇÃO DE PROJETO\n\n" +
-                "🆔 " + project.id + "\n" +
-                "👤 Cliente: " + (project.cliente || "Não informado") + "\n" +
-                "🏢 Empresa: " + (project.empresa || "Não informado") + "\n" +
-                "📁 Projeto: " + (project.nome || project.tipoProjeto || "Não informado") + "\n" +
-                "📅 Prazo: " + prazo + "\n\n" +
-                "📝 Descrição:\n" + (project.descricao || "Não informado") + "\n\n" +
-                "🟡 Status: Projeto Solicitado";
+            const text = isDevelopment
+                ? "🚀 PROJETO ENCAMINHADO PARA DESENVOLVIMENTO\n\n" +
+                  "🆔 " + project.id + "\n" +
+                  "👤 Cliente: " + (project.cliente || "Não informado") + "\n" +
+                  "🏢 Empresa: " + (project.empresa || "Não informado") + "\n" +
+                  "📁 Projeto: " + (project.nome || project.tipoProjeto || "Não informado") + "\n" +
+                  "📅 Prazo: " + prazo + "\n\n" +
+                  "📝 Descrição:\n" + (project.descricao || "Não informado") + "\n\n" +
+                  "🔵 Status: Não Iniciado"
+                : "🚨 NOVA SOLICITAÇÃO DE PROJETO\n\n" +
+                  "🆔 " + project.id + "\n" +
+                  "👤 Cliente: " + (project.cliente || "Não informado") + "\n" +
+                  "🏢 Empresa: " + (project.empresa || "Não informado") + "\n" +
+                  "📁 Projeto: " + (project.nome || project.tipoProjeto || "Não informado") + "\n" +
+                  "📅 Prazo: " + prazo + "\n\n" +
+                  "📝 Descrição:\n" + (project.descricao || "Não informado") + "\n\n" +
+                  "🟡 Status: Projeto Solicitado";
 
             state.messages[channel.id].push({
                 id: generateId("msg_project"),
@@ -5654,13 +5662,10 @@
             saveState();
         }
 
-        // A fila é limpa somente depois de ser processada. O ID gravado
-        // na mensagem impede duplicações mesmo se a sincronização rodar novamente.
         localStorage.removeItem(PROJECT_NOTIFICATION_KEY);
 
         return changed;
     }
-
 
     /* =========================================================
        INITIALIZATION
