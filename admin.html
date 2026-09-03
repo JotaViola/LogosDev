@@ -19,6 +19,23 @@
         href="style.css"
     >
 
+    <style>
+        .card-value {
+            margin-top: 10px;
+            font-size: 13px;
+            opacity: .9;
+        }
+
+        .card-value strong {
+            font-size: 14px;
+        }
+
+        #editValor:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+        }
+    </style>
+
 </head>
 
 
@@ -574,6 +591,29 @@
                         </option>
 
                     </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="editValor">
+                        Valor do projeto
+                    </label>
+
+                    <input
+                        type="number"
+                        id="editValor"
+                        min="0"
+                        step="0.01"
+                        placeholder="0,00"
+                    >
+
+                    <small
+                        id="editValorHelp"
+                        style="display:block;margin-top:6px;opacity:.7;"
+                    >
+                        O valor poderá ser definido após o projeto deixar a etapa "Projeto Solicitado".
+                    </small>
 
                 </div>
 
