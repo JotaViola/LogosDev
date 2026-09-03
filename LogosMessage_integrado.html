@@ -736,9 +736,10 @@
 
             overflow-y: auto;
 
+            /* Chat mais compacto, sem espaço exagerado no topo */
             padding:
-                25px 30px
-                20px;
+                8px 30px
+                16px;
 
             background:
                 radial-gradient(
@@ -747,6 +748,8 @@
                     transparent 30%
                 ),
                 var(--main);
+
+            scroll-behavior: smooth;
         }
 
 
@@ -815,16 +818,17 @@
             position: relative;
 
             display: flex;
+            align-items: flex-start;
 
-            gap: 12px;
+            gap: 10px;
 
             padding:
-                7px 10px;
+                3px 10px;
 
             margin:
                 0 -10px;
 
-            border-radius: 8px;
+            border-radius: 7px;
 
             transition:
                 background .15s;
@@ -847,9 +851,11 @@
             display: flex;
             align-items: baseline;
 
-            gap: 8px;
+            gap: 6px;
 
-            margin-bottom: 3px;
+            margin-bottom: 1px;
+
+            min-height: 16px;
         }
 
         .message-author {
@@ -870,11 +876,13 @@
 
             font-size: 13px;
 
-            line-height: 1.55;
+            line-height: 1.45;
 
             white-space: pre-wrap;
 
             word-break: break-word;
+
+            margin: 0;
         }
 
         .message-text a {
@@ -2084,6 +2092,27 @@
 /* TEAM & ROLES */
 .team-tabs{display:flex;gap:6px;padding:5px;background:#17181c;border:1px solid var(--border);border-radius:10px;margin-bottom:12px}.team-tab{flex:1;border:0;border-radius:7px;background:transparent;color:#92959e;padding:9px;font-size:11px;font-weight:800;cursor:pointer}.team-tab.active,.team-tab:hover{background:#32343a;color:#d9c48e}.team-toolbar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.team-toolbar h3{font-size:14px;color:#fff}.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:430px;overflow:auto}.team-card,.team-role-card{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid #34363d;border-radius:9px;background:#202126}.team-card-info{flex:1;min-width:0}.team-card-name,.team-role-name{font-size:12px;font-weight:800;color:#fff}.team-card-email,.team-role-desc{font-size:9px;color:#777a83;margin-top:3px;overflow:hidden;text-overflow:ellipsis}.team-card-role{display:inline-block;margin-top:6px;padding:3px 6px;border-radius:5px;background:#302e26;color:#d9c48e;font-size:8px;font-weight:800}.team-card-actions{display:flex;gap:3px}.team-icon-btn{width:28px;height:28px;border:1px solid #3b3d44;border-radius:6px;background:#292b30;color:#b7b9bf}.team-icon-btn:hover{color:#fff;background:#383a40}.team-icon-btn.danger:hover{color:#ff7777}.team-role-list{display:flex;flex-direction:column;gap:7px;max-height:430px;overflow:auto}.team-role-perms{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}.team-perm{padding:3px 6px;border-radius:5px;background:#2b2d33;color:#777a83;font-size:8px}.team-perm.on{background:#302e26;color:#d9c48e}.team-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.team-form .full{grid-column:1/-1}.team-form label{display:flex;flex-direction:column;gap:5px;color:#8d9098;font-size:9px;font-weight:800}.team-form input,.team-form select{height:36px;padding:0 10px;border:1px solid #373941;border-radius:7px;background:#1a1b1f;color:#fff;outline:none}.team-perm-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.team-perm-check{display:flex!important;flex-direction:row!important;align-items:center;padding:8px;border:1px solid #33353c;border-radius:7px;background:#1c1d21}.team-perm-check input{height:auto;accent-color:#cab273}@media(max-width:650px){.team-grid,.team-form,.team-perm-grid{grid-template-columns:1fr}}
 
+
+        /* =========================================================
+           CHAT COMPACTO - REGRA FINAL
+           Corrige espaços causados pelo template das mensagens.
+        ========================================================= */
+        #messages.messages {
+            padding-top: 8px;
+        }
+
+        #messages .message {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        #messages .message-text {
+            margin: 0;
+        }
+
+        #messages .message-text:first-child {
+            margin-top: 0;
+        }
     </style>
 </head>
 
@@ -2607,8 +2636,16 @@
 
     function formatText(text) {
 
+        /*
+         * Limpa espaços/quebras de linha no início e no final
+         * da mensagem. As quebras internas continuam preservadas.
+         */
+        const cleanText = String(text || "")
+            .replace(/^\s+/, "")
+            .replace(/\s+$/, "");
+
         let result =
-            escapeHtml(text);
+            escapeHtml(cleanText);
 
         result =
             result.replace(
@@ -3855,13 +3892,9 @@
                     ${replyHtml}
 
 
-                    <div class="message-text">
-
-                        ${formatText(
-                            message.text
-                        )}
-
-                    </div>
+                    <div class="message-text">${formatText(
+                        message.text
+                    )}</div>
 
 
                     ${reactionsHtml}
